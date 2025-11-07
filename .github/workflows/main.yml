@@ -1,0 +1,78 @@
+ main.py
+
+Um código simples em Python (pode ser o seu sistema de consultas, ou esse exemplo básico):
+
+def soma(a, b):
+    return a + b
+
+if __name__ == "__main__":
+    print("Build do projeto executado com sucesso!")
+
+
+---
+
+ test_validacao.py
+
+Um teste simples que simula o uso do pytest (ou um teste manual mesmo).
+
+import sys
+from main import soma
+
+def test_soma():
+    assert soma(2, 3) == 5
+
+if __name__ == "__main__":
+    try:
+        test_soma()
+        print(" Testes executados com sucesso!")
+        sys.exit(0)
+    except AssertionError:
+        print(" Teste falhou!")
+        sys.exit(1)
+
+
+---
+
+ .github/workflows/ci.yml
+
+Esse é o arquivo principal do GitHub Actions.
+Ele deve estar no caminho:
+.github/workflows/ci.yml
+
+name: Integração Contínua (CI)
+
+on:
+  push:
+    branches:
+      - develop  # Executa o pipeline apenas quando houver push na branch develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Etapa 1: Clonar o repositório
+      - name:  Fazer checkout do código
+        uses: actions/checkout@v3
+
+      # Etapa 2: Instalar o Python
+      - name:  Configurar ambiente Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Etapa 3: Build (simulação)
+      - name:  Etapa de Build
+        run: echo "Compilando o projeto (simulação de build)..."
+
+      # Etapa 4: Testes
+      - name:  Etapa de Testes
+        run: python test_validacao.py
+
+      # Etapa 5: Relatório final
+      - name:  Relatório final
+        if: success()
+        run: echo " Build successful!"
+      - name:  Relatório de falha
+        if: failure()
+        run: echo " Test failed!"
